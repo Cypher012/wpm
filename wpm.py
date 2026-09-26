@@ -29,7 +29,7 @@ from datetime import timedelta
 import evdev
 from evdev import ecodes
 from rich.align import Align
-from rich.console import Group
+from rich.console import Console, Group
 from rich.live import Live
 from rich.panel import Panel
 from rich.table import Table
@@ -370,8 +370,15 @@ def main():
     )
     listener_thread.start()
 
+    console = Console(force_terminal=True)
+
     try:
-        with Live(render(tracker), refresh_per_second=REFRESH_HZ, screen=False) as live:
+        with Live(
+            render(tracker),
+            refresh_per_second=REFRESH_HZ,
+            screen=True,
+            console=console,
+        ) as live:
             while True:
                 time.sleep(1 / REFRESH_HZ)
                 wpm = tracker.current_wpm()
